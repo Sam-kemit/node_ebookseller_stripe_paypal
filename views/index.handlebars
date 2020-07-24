@@ -5,25 +5,28 @@
                 Web Development Ebook
             </h1>
             <p class="lead">Learn web development front to back</p>
-             <form action="/charge" method="POST">
+            <form action="/charge" method="POST">
                 <script
                     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                     data-key="{{stripePublishableKey}}"
                     data-amount="2500"
                     data-name="Web Development Ebook"
                     data-description="Ebook written by Samuel KUETA"
-                    data-image="/img/marketplace.png"
+                    data-image="/img/logo.png"
                     data-locale="auto">
                 </script>
                 <script>
                 // Hide default stripe button
                 document.getElementsByClassName('stripe-button-el')[0].style.display = 'none';
                 </script>
-                <button type="submit" class="btn btn-outline-dark text-white btn-lg">Purchase For $25</button>
+                <button type="submit" class="btn btn-outline-success text-dark btn-lg">Purchase For $25</button>
+            </form>
+             <form action="/pay" method="POST">
+                <input type="submit" value="Buy with Paypal" class="btn btn-outline-info text-dark btn-lg">
             </form>
         </div>
         <div class="col-md-6">
-            <img src="/img/book.png" alt="" class="img-fluid">
+            <img src="/img/myBook.png" alt="" class="img-fluid">
         </div>
     </div>
 </section>

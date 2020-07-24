@@ -2,7 +2,16 @@ const express = require('express'),
          keys = require('./config/keys'),
        stripe = require('stripe')(keys.stripeSecretKey),
    bodyParser = require('body-parser'),
-       exphbs = require('express-handlebars');
+       exphbs = require('express-handlebars'),
+       paypal = require('paypal-rest-sdk');
+
+const userCredential = require('./config/userCredential');
+paypal.configure({
+    mode: userCredential.mode, // Sandbox or live
+    client_id: userCredential.client_id,
+    client_secret: userCredential.client_secret
+});
+
 
 const app = express();
 
@@ -24,7 +33,75 @@ app.get('/', (req, res) => {
     });
 });
 
+// Buy with Paypal
+app.post('/pay', (req, res) => {
+    const create_payment_json = {
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"
+        },
+        "redirect_urls": {
+            "return_url": "http://localhost:5000/success",
+            "cancel_url": "http://localhost:5000/cancel"
+        },
+        "transactions": [{
+            "item_list": {
+                "items": [{
+                    "name": "T-shirt la TeamSK",
+                    "sku": "001",
+                    "price": "45.00",
+                    "currency": "USD",
+                    "quantity": 1
+                }]
+            },
+            "amount": {
+                "currency": "USD",
+                "total": "45.00"
+            },
+            "description": "T-shirt for the best team ever."
+        }]
+    };
+
+    paypal.payment.create(create_payment_json, function (error, payment) {
+        if (error) {
+            throw error;
+        } else {
+            // console.log("Create Payment Response");
+            // console.log(payment);
+            for (let i=0; i<payment.links.length; ++i) {
+                if (payment.links[i].rel === 'approval_url') {
+                    res.redirect(payment.links[i].href);
+                }
+            }
+        }
+    });
+    
+});
+
 app.get('/success', (req, res) => {
+    const payerId = req.query.PayerID,
+        paymentId = req.query.paymentId;
+
+    const execute_payment_json = {
+        "payer_id": payerId,
+        "transactions": [{
+            "amount": {
+                "currency": "USD",
+                "total": "45.00"
+            }
+        }]
+    };
+
+    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+        if (error) {
+            console.log(error.response);
+            throw error;
+        } else {
+            //console.log("Get Payment Response");
+            console.log(JSON.stringify(payment));
+            //res.send('Success');
+        }
+    });
     res.render('success');
 });
 
