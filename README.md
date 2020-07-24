@@ -7,6 +7,10 @@ Node.js, express app that uses the Stripe and Paypal API to sell an ebook.
 ## Version 
 **1.0.0**
 
+## Sreenshot
+![dashboard](/public/img/db.png)
+![stripe](/public/img/stripe1.png)
+
 # Usage
 
 ## Create a config/keys_dev.js file and add 
