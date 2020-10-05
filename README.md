@@ -2,7 +2,8 @@
 
 Node.js, express app that uses the Stripe and Paypal API to sell an ebook.
 
-:computer: I developed this app to practice online payment APIs.
+:computer: I developed this app to practice online payment APIs. 
+To see the **project**, click ➡️: [here](https://sleepy-harbor-08215.herokuapp.com/)</br>
 
 ## Version 
 **1.0.0**
